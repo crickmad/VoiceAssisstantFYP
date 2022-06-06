@@ -9,10 +9,12 @@ from random import choice
 from utils import opening_text,verify_text
 from pprint import pprint
 import time
+import socket
 
+from Offlinecmd import *
 
 USERNAME ="Noobtech" #config('USER')
-BOTNAME = "Jarvis"#config('BOTNAME')
+BOTNAME = "zia"#config('BOTNAME')
 
 
 engine = pyttsx3.init('sapi5')
@@ -31,9 +33,8 @@ engine.setProperty('voice', voices[1].id)
 # Text to Speech Conversion
 def speak(text):
     """Used to speak whatever text is passed to it"""
-
     engine.say(text)
-    print(text)
+    print(f">>>>>>  {text}")
     engine.runAndWait()
     time.sleep(1)
 
@@ -41,7 +42,6 @@ def speak(text):
 # Greet the user
 def greet_user():
     """Greets the user according to the time"""
-    
     hour = datetime.now().hour
     if (hour >= 6) and (hour < 12):
         speak(f"Good Morning {USERNAME}")
@@ -82,9 +82,9 @@ def take_user_input():
 def exit_stop():
     hour = datetime.now().hour
     if hour >= 21 and hour < 6:
-        speak("Good night sir, take care!")
+        speak("terminating, Good night buddy, take care!")
     else:
-        speak('Have a good day sir!')
+        speak('Have a good day buddy!')
     exit()
 
     #REACTIVATE
@@ -99,7 +99,7 @@ def reactivate():
         print('Recognizing...')
         global react
         react = b.recognize_google(audio, language='en-in')
-        print(react)
+        #print(react)
         if 'exit' in react or 'stop' in react:
             exit_stop()
         
@@ -118,18 +118,30 @@ def append_dataonlogfile(logfiledata):
     logdata.write("\n")
     logdata.close()
 
+def append_dataonwordfile(wordfiledata):
+    global worddata
+    hr = datetime.now()
+    worddata = open("wordfile.txt", "a")
+    worddata.write(hr.strftime("%c"))
+    worddata.write(" ########### ")
+    worddata.write(wordfiledata)
+    worddata.write("\n")
+    worddata.close()
+
 def wakeup():
     react = reactivate().lower()
     
-    wakeme = "hey macha"
+    wakeme = "hello"
     wake = list(wakeme.split())
     #print(wakeme)
     r = list(react.split())
     #print(r)
-    while wake[0] == r[0] and wake[1] == r[1]:
+    while wake[0] == r[0] :
         if len(r) > len(wake):
             query = react
             speak("working out")
+            print(query)
+            append_dataonlogfile(query)
             listen(query)
             
         elif len(r) == len(wake):
@@ -138,12 +150,15 @@ def wakeup():
             if 'none' in query:
                 pass
             else:
+                print(query)
+                append_dataonlogfile(query)
                 listen(query)
         r =["",""]
     if "none" in react:
         pass        
     elif not wakeme in react:
-        append_dataonlogfile(react)
+        append_dataonwordfile(react)
+
         
 def listen(query):
     try:
@@ -297,8 +312,31 @@ def listen(query):
     except:
         speak("Something i couldn't fetch now, try again later")                       
 
+
 if __name__ == '__main__':
-    #speak(f"Loading AI personal assistant {BOTNAME}")
-    #greet_user()
-    while True:
-        wakeup()
+    global check    
+    #check connection
+    try:
+        request = requests.get('https://www.google.com/', timeout = 10)
+        check = False
+    except(requests.ConnectionError, requests.Timeout) as Exception:
+        check = False
+        print("offline")
+
+    if(check == True):
+        #append_dataonlogfile("-----------------Voice Assistant Initiated--------------------")
+        #print("Loading AI personal assistant jarvis")
+        speak(f"Loading AI personal assistant {BOTNAME}")
+        #greet_user()
+        while True:
+            wakeup()
+    else:
+        print("offline part")
+        #append_dataonlogfile("-----------------Voice Assistant Initiated--------------------")
+        #speak(f"Loading personal assistant {BOTNAME}")
+        #greet_user()
+        #speak("you're offline, to get more feature turn to online.")
+        #speak("but still you can workout with limited features.")
+        #speak("like say, open command prompt")
+        while True:
+            Offlinecmd()

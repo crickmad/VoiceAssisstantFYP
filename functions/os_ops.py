@@ -5,13 +5,15 @@ import wmi
 
 paths = {
     'notepad': "C:\\Program Files\\Notepad++\\notepad++.exe",
-    'discord': "C:\\Users\\ashut\\AppData\\Local\\Discord\\app-1.0.9003\\Discord.exe",
-    'calculator': "C:\\Windows\\System32\\calc.exe"
+    'notepadwin' : 'C:\\Windows\\System32\\notepad.exe',
+    'discord': "C:\\Users\\deepak\\AppData\\Local\\Discord\\app-1.0.9004\\Discord.exe",
+    'calculator': "C:\\Windows\\System32\\calc.exe",
+    'taskmgr' : 'C:\\Windows\\System32\\Taskmgr.exe',
 }
 
 
 def open_notepad():
-    os.startfile(paths['notepad'])
+    os.startfile(paths['notepadwin'])
     print("notepad opened successfully")
     time.sleep(5)
 
@@ -34,7 +36,7 @@ def open_calculator():
     time.sleep(5)
 
 def open_taskmanager():
-    os.system('control schedtasks')
+    os.startfile(paths['taskmgr'])
     print("task manager opened successfully")
     time.sleep(5)
 
