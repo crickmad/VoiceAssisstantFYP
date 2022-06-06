@@ -1,7 +1,0 @@
-<RCC>
-  <qresource prefix="redc"/>
-  <qresource prefix="newPrefix">
-    <file>pic/img-removebg.png</file>
-    <file>pic/wave-sound-unscreen.gif</file>
-  </qresource>
-</RCC>
