@@ -8,7 +8,7 @@ import wmi
 from datetime import datetime
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>vosk model<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-modelUS = Model(r"E:\FinalYearProj\VoiceAssistant\vosk-model-small-en-us-0.15")
+modelUS = Model(r"E:\\FinalYearProj\\TESTonUI\\12\\vosk-model-small-en-us-0.15")
 
 recognizer = KaldiRecognizer(modelUS, 16000)
 
@@ -74,7 +74,7 @@ def listen(updatedtxt):
             speak("opening camera")
             open_camera_off()
         
-        if(f'{botname} open camera' in updatedtxt):
+        if(f'{botname} close camera' in updatedtxt):
             speak('closing camera')
             close_camera_off()
         
@@ -83,7 +83,7 @@ def listen(updatedtxt):
             speak("opening calculator")
             open_calc_off()
 
-        if(f'{botname} open calculator' in updatedtxt or f'{botname} open calculated'in updatedtxt):
+        if(f'{botname} close calculator' in updatedtxt or f'{botname} close calculated'in updatedtxt):
             speak('closing calculator')
             close_calc_off()
 
@@ -92,7 +92,7 @@ def listen(updatedtxt):
             speak("opening task manager")
             open_taskmanager_off()
         
-        if(f'{botname} open task manager' in updatedtxt):
+        if(f'{botname} close task manager' in updatedtxt):
             speak('closing task manager')
             close_taskmanager_off()
 

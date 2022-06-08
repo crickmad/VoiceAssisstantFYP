@@ -13,6 +13,13 @@ import socket
 
 from Offlinecmd import *
 
+import sys
+from PyQt5 import QtGui
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from ziaui import Ui_MainWindow
+
 USERNAME ="Noobtech" #config('USER')
 BOTNAME = "zia"#config('BOTNAME')
 
@@ -313,30 +320,64 @@ def listen(query):
         speak("Something i couldn't fetch now, try again later")                       
 
 
-if __name__ == '__main__':
-    global check    
-    #check connection
-    try:
-        request = requests.get('https://www.google.com/', timeout = 10)
-        check = False
-    except(requests.ConnectionError, requests.Timeout) as Exception:
-        check = False
-        print("offline")
+class MainThread(QThread):
+    def __init__(self):
+        super(MainThread, self).__init__()
+    
+    def run(self):
+        self.mainfunc()
 
-    if(check == True):
-        #append_dataonlogfile("-----------------Voice Assistant Initiated--------------------")
-        #print("Loading AI personal assistant jarvis")
-        speak(f"Loading AI personal assistant {BOTNAME}")
-        #greet_user()
-        while True:
-            wakeup()
-    else:
-        print("offline part")
-        #append_dataonlogfile("-----------------Voice Assistant Initiated--------------------")
-        #speak(f"Loading personal assistant {BOTNAME}")
-        #greet_user()
-        #speak("you're offline, to get more feature turn to online.")
-        #speak("but still you can workout with limited features.")
-        #speak("like say, open command prompt")
-        while True:
-            Offlinecmd()
+    def mainfunc(self):
+        global check    
+        #check connection
+        try:
+            request = requests.get('https://www.google.com/', timeout = 10)
+            check = True
+        except(requests.ConnectionError, requests.Timeout) as Exception:
+            check = False
+            print("offline")
+
+        if(check == True):
+            #append_dataonlogfile("-----------------Voice Assistant Initiated--------------------")
+            #print("Loading AI personal assistant jarvis")
+            speak(f"Loading AI personal assistant {BOTNAME}")
+            #greet_user()
+            while True:
+                wakeup()
+        else:
+            print("offline part")
+            #append_dataonlogfile("-----------------Voice Assistant Initiated--------------------")
+            #speak(f"Loading personal assistant {BOTNAME}")
+            #greet_user()
+            #speak("you're offline, to get more feature turn to online.")
+            #speak("but still you can workout with limited features.")
+            #speak("like speak, open command prompt")
+            while True:
+                Offlinecmd()
+
+startExc = MainThread()
+
+class Main(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_MainWindow() 
+        self.ui.setupUi(self)
+        #self.ui.setWindowTitle(Qt.FramelessWindowHint)
+        self.ui.start_push.clicked.connect(self.startTask)
+    
+    def startTask(self):
+        self.ui.movie=QtGui.QMovie('UIassets\\bg3.jpg')
+        self.ui.bgimg.setMovie(self.ui.movie)
+        self.ui.movie.start()
+        self.ui.movie=QtGui.QMovie('UIassets\\wave-sound-unscreen.gif')
+        self.ui.maingif.setMovie(self.ui.movie)
+        self.ui.movie.start()
+        self.ui.movie=QtGui.QMovie('UIassets\\mic1-unscreen.gif')
+        self.ui.micgif.setMovie(self.ui.movie)
+        self.ui.movie.start()
+        startExc.start()
+
+app = QApplication(sys.argv)
+aa = Main()
+aa.show()
+exit(app.exec_())
